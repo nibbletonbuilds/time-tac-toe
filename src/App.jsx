@@ -1,35 +1,98 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
+function Square ({ value, squareOnClick }) {
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+	return (
+		<button className="square"
+				onClick={squareOnClicks}
+		>
+			{ value }
+		</button>
+	);
 }
 
-export default App
+function findWinner (squares) {
+
+	// checking diagonals for a winnner:
+	
+	if (squares[0] && squares[0] == squares[4] && squares[4] == squares[8])	// main diagonal;
+	{
+		return squares[0];
+	}
+	if (squares[2] && squares[2] == squares[4] && squares[4] == squares[6])	// opposite diagonal;
+	{
+		return squares[2];
+	}
+
+	// checking rows and columns for a winner:s
+	
+	let firstElement;
+
+	// checking columns:
+	for (let i = 0; i < 3; ++i)
+	{
+		firstElement = squares[i];
+		if (firstElement == squares[i + 3] && firstElement == squares[i + 6])
+		{
+			if (firstElement)
+			{
+				return firstElement;
+			}
+		}
+	}
+
+	// checking rows:
+	for (let i = 0; i < 9; i += 3)
+	{
+		firstElement = squares[i];
+		if (firstElement == squares[i + 1] && firstElement == squares[i + 2])
+		{
+			if (firstElement)
+			{
+				return firstElement;
+			}
+		}
+	}
+	
+	return null;	// when no winner;
+} 
+
+function Board() {
+
+	const [crossIsNext, setCrossIsNext] = useState (true);
+	const [squares, setSquares] = useState (Array (9).fill (null));
+
+	function handleClick (i)
+	{
+		const nextSquares = squares.slice();
+
+		nextSquares[i] = crossIsNext ? "X" : "O";
+
+		setSquares (nextSquares);
+		setCrossIsNext (!crossIsNext);
+	}
+
+	return (
+		<>
+			<div className="board-row">
+				<Square value={squares[0]} squareOnClick={() => handleClick(0)} />
+				<Square value={squares[1]} squareOnClick={() => handleClick(1)} />
+				<Square value={squares[2]} squareOnClick={() => handleClick(2)} />
+			</div>
+
+			<div className="board-row">
+				<Square value={squares[3]} squareOnClick={() => handleClick(3)} />
+				<Square value={squares[4]} squareOnClick={() => handleClick(4)} />
+				<Square value={squares[5]} squareOnClick={() => handleClick(5)} />
+			</div>
+
+			<div className="board-row">
+				<Square value={squares[6]} squareOnClick={() => handleClick(6)} />
+				<Square value={squares[7]} squareOnClick={() => handleClick(7)} />
+				<Square value={squares[8]} squareOnClick={() => handleClick(8)} />
+			</div>
+		</>
+	);
+}
+
+export default Board;
