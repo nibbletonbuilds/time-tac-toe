@@ -4,7 +4,7 @@ function Square ({ value, squareOnClick }) {
 
 	return (
 		<button className="square"
-				onClick={squareOnClicks}
+				onClick={squareOnClick}
 		>
 			{ value }
 		</button>
@@ -14,7 +14,7 @@ function Square ({ value, squareOnClick }) {
 function findWinner (squares) {
 
 	// checking diagonals for a winnner:
-	
+
 	if (squares[0] && squares[0] == squares[4] && squares[4] == squares[8])	// main diagonal;
 	{
 		return squares[0];
@@ -24,7 +24,7 @@ function findWinner (squares) {
 		return squares[2];
 	}
 
-	// checking rows and columns for a winner:s
+	// checking rows and columns for a winner:
 	
 	let firstElement;
 
@@ -64,12 +64,30 @@ function Board() {
 
 	function handleClick (i)
 	{
+		const isWinnerExistAlready = findWinner (squares);
+		if (squares[i] || isWinnerExistAlready)
+		{
+			return ;
+		}
+
 		const nextSquares = squares.slice();
 
 		nextSquares[i] = crossIsNext ? "X" : "O";
 
 		setSquares (nextSquares);
 		setCrossIsNext (!crossIsNext);
+	}
+
+	const winner = findWinner (squares);
+	
+	let status;
+	if (winner)
+	{
+		status = "Winner: " + winner;
+	}
+	else
+	{
+		status = "Next player: " + crossIsNext;
 	}
 
 	return (
